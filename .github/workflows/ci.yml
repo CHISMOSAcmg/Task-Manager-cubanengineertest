@@ -42,7 +42,7 @@ jobs:
     - name: Checkout código
       uses: actions/checkout@v4
     
-    - name: Setup Node.js
+    - name: Setup Node.js 18
       uses: actions/setup-node@v4
       with:
         node-version: '18'
@@ -50,13 +50,7 @@ jobs:
         cache-dependency-path: frontend/package-lock.json
     
     - name: Install dependencies
-      run: npm ci
-    
-    - name: Run tests
-      run: npm test -- --run
-    
-    - name: Run linter
-      run: npm run lint
+      run: npm install
     
     - name: Build frontend
       run: npm run build

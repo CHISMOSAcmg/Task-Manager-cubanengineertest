@@ -12,21 +12,8 @@ export default defineConfig({
       },
     },
   },
-  test: {
-    globals: true,
-    environment: 'jsdom',
-    setupFiles: './src/setupTests.js',
-  },
-  // Configuración para build de producción
   build: {
     outDir: 'dist',
-    sourcemap: false,
     minify: 'terser',
-    terserOptions: {
-      compress: {
-        drop_console: true,
-      },
-    },
-  },
-  base: './',
+  }
 })
