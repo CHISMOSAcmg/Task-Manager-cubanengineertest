@@ -1,0 +1,811 @@
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', sans-serif;
+  background-color: #f5f5f5;
+  color: #333;
+}
+
+.app {
+  min-height: 100vh;
+  padding: 20px;
+}
+
+.container {
+  max-width: 800px;
+  margin: 0 auto;
+}
+
+.app-title {
+  text-align: center;
+  margin-bottom: 30px;
+  color: #2c3e50;
+  font-weight: 300;
+}
+
+.empty-state {
+  text-align: center;
+  padding: 60px 20px;
+  color: #7f8c8d;
+  font-style: italic;
+  border: 2px dashed #bdc3c7;
+  border-radius: 8px;
+  margin-bottom: 20px;
+}
+
+.task-item {
+  position: relative;
+  background: white;
+  border-radius: 8px;
+  padding: 16px;
+  margin-bottom: 12px;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+  border-left: 4px solid #3498db;
+  transform: translateZ(0);
+  min-height: 60px;
+}
+
+.task-item.editable-task {
+  transition: background-color 0.2s;
+  cursor: pointer;
+}
+
+.task-item.editable-task:hover {
+  background-color: #f8f9fa;
+  border-left-color: #e67e22;
+}
+
+.task-item.empty-task {
+  border-left: 4px solid #bdc3c7;
+  background-color: #f8f9fa;
+}
+
+.task-item.empty-task .add-task-placeholder {
+  padding: 20px;
+  text-align: center;
+  color: #7f8c8d;
+  cursor: pointer;
+  font-style: italic;
+  transition: color 0.2s;
+}
+
+.task-item.empty-task .add-task-placeholder:hover {
+  color: #3498db;
+}
+
+.task-item.editing-task {
+  border-left: 4px solid #e67e22;
+  position: relative;
+  padding-top: 50px;
+  min-height: 140px;
+  will-change: transform;
+}
+
+.task-item.editing-existing {
+  border-left: 4px solid #e74c3c;
+}
+
+.task-list {
+  margin-top: 20px;
+}
+
+.loading {
+  text-align: center;
+  padding: 40px;
+  color: #7f8c8d;
+}
+
+.add-task-form {
+  width: 100%;
+}
+
+.input-with-preview {
+  position: relative;
+  margin-bottom: 8px;
+  min-height: 44px;
+  overflow: hidden;
+}
+
+.task-input-real {
+  width: 100%;
+  padding: 12px;
+  border: 1px solid #bdc3c7;
+  border-radius: 4px;
+  font-size: 16px;
+  background: transparent;
+  position: relative;
+  z-index: 2;
+  color: transparent;
+  caret-color: #3498db;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', sans-serif;
+  line-height: 1.4;
+  resize: none;
+  overflow: auto;
+  white-space: pre-wrap;
+  word-wrap: break-word;
+  min-height: 44px;
+  max-height: 200px;
+}
+
+.task-input-real:focus {
+  outline: none;
+  border-color: #3498db;
+  box-shadow: 0 0 0 2px rgba(52, 152, 219, 0.2);
+}
+
+.input-preview {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  min-height: 44px;
+  padding: 12px;
+  pointer-events: none;
+  z-index: 1;
+  font-size: 16px;
+  line-height: 1.4;
+  white-space: pre-wrap;
+  word-wrap: break-word;
+  word-break: break-word;
+  display: block;
+  max-height: 200px;
+  overflow: hidden;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', sans-serif;
+  font-kerning: normal;
+  font-variant-ligatures: none;
+}
+
+.input-preview span {
+  display: inline;
+  line-height: inherit;
+  padding: 0;
+  margin: 0;
+  border: none;
+}
+
+.input-placeholder {
+  color: #7f8c8d;
+  font-style: italic;
+}
+
+.input-normal-text {
+  color: #2c3e50;
+}
+
+.input-mention {
+  color: #fdcb6e;
+  font-weight: 400;
+}
+
+.input-hashtag {
+  color: #d63031;
+  font-weight: 400;
+}
+
+.input-email {
+  color: #3498db;
+  font-weight: 400;
+}
+
+.input-link {
+  color: #27ae60;
+  font-weight: 400;
+}
+
+.char-counter {
+  text-align: right;
+  font-size: 12px;
+  color: #7f8c8d;
+  margin-top: 4px;
+  margin-bottom: 8px;
+}
+
+.char-counter.warning {
+  color: #e67e22;
+}
+
+.char-counter.error {
+  color: #e74c3c;
+  font-weight: bold;
+}
+
+.action-buttons {
+  display: flex;
+  flex-wrap: nowrap;
+  gap: 8px;
+  align-items: center;
+  justify-content: space-between;
+  overflow-x: auto;
+  padding-bottom: 4px;
+}
+
+.action-buttons-right {
+  display: flex;
+  gap: 8px;
+  margin-left: auto;
+  flex-shrink: 0;
+}
+
+.btn-status {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  background-color: #ecf0f1;
+  color: #2c3e50;
+  border: 1px solid #bdc3c7;
+  padding: 6px 8px;
+  font-size: 12px;
+  cursor: pointer;
+  border-radius: 4px;
+  transition: all 0.2s;
+  min-height: 32px;
+  white-space: nowrap;
+  position: relative;
+  min-width: 32px;
+}
+
+.btn-status.active {
+  background-color: #3498db;
+  color: white;
+  border-color: #2980b9;
+}
+
+.btn-status:hover {
+  background-color: #d5dbdb;
+}
+
+.btn-status:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.btn-status:disabled:hover {
+  background-color: #ecf0f1;
+}
+
+.btn-text {
+  font-size: 12px;
+  display: none;
+}
+
+.btn-status[title]:hover::after {
+  content: attr(title);
+  position: absolute;
+  bottom: -30px;
+  left: 50%;
+  transform: translateX(-50%);
+  background: #333;
+  color: white;
+  padding: 4px 8px;
+  border-radius: 4px;
+  font-size: 12px;
+  white-space: nowrap;
+  z-index: 1000;
+}
+
+.btn-cancel {
+  background-color: #95a5a6;
+  color: white;
+  padding: 6px 12px;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 12px;
+}
+
+.btn-cancel:hover {
+  background-color: #7f8c8d;
+}
+
+.btn-ok {
+  background-color: #27ae60;
+  color: white;
+  padding: 6px 12px;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 12px;
+}
+
+.btn-ok:hover {
+  background-color: #219a52;
+}
+
+.btn-add {
+  background-color: #e67e22;
+  color: white;
+  padding: 6px 12px;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 12px;
+}
+
+.btn-add:hover {
+  background-color: #d35400;
+}
+
+.btn:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.btn:disabled:hover {
+  background-color: inherit;
+}
+
+.add-task-form .btn-status:not(.active) {
+  opacity: 0.6;
+}
+
+.task-item.editing-task .task-header {
+  position: absolute;
+  top: 12px;
+  right: 12px;
+  z-index: 20;
+}
+
+.btn-action-icon {
+  background: none;
+  border: none;
+  font-size: 16px;
+  cursor: pointer;
+  padding: 6px;
+  border-radius: 4px;
+  transition: background-color 0.2s;
+  width: 32px;
+  height: 32px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: bold;
+  background-color: white;
+  border: 1px solid #bdc3c7;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+}
+
+.btn-action-icon:hover {
+  background-color: #e9ecef;
+  border-color: #95a5a6;
+}
+
+.touchable {
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.touchable:hover {
+  opacity: 0.8;
+  transform: translateY(-1px);
+}
+
+.action-buttons::-webkit-scrollbar {
+  height: 4px;
+}
+
+.action-buttons::-webkit-scrollbar-track {
+  background: #f1f1f1;
+  border-radius: 2px;
+}
+
+.action-buttons::-webkit-scrollbar-thumb {
+  background: #c1c1c1;
+  border-radius: 2px;
+}
+
+.btn-status svg {
+  flex-shrink: 0;
+}
+
+.task-content-simple {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px;
+  align-items: center;
+  min-height: 40px;
+  line-height: 1.4;
+}
+
+.task-normal-text {
+  color: #2c3e50;
+  font-size: 14px;
+  line-height: 1.4;
+  word-break: break-word;
+}
+
+.task-elements {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px;
+}
+
+.task-element {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  padding: 2px 6px;
+  border-radius: 12px;
+  font-size: 11px;
+  font-weight: 500;
+  transition: all 0.2s;
+  border: 1px solid transparent;
+  line-height: 1;
+  margin: 0 1px;
+}
+
+.task-mention {
+  background-color: #ffeaa7;
+  color: #e17055;
+  border-color: #fdcb6e;
+}
+
+.task-hashtag {
+  background-color: #fab1a0;
+  color: #d63031;
+  border-color: #e17055;
+}
+
+.task-email {
+  background-color: #74b9ff;
+  color: #0984e3;
+  border-color: #0984e3;
+}
+
+.task-link {
+  background-color: #55efc4;
+  color: #00b894;
+  border-color: #00b894;
+}
+
+.task-element.touchable:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+  opacity: 0.9;
+}
+
+.task-element svg {
+  flex-shrink: 0;
+}
+
+.email-text, .link-text {
+  font-size: 11px;
+  max-width: 120px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.empty-list {
+  font-style: italic;
+  color: #7f8c8d;
+}
+
+.btn:focus,
+.btn-action-icon:focus,
+.task-input-real:focus {
+  outline: 2px solid #3498db;
+  outline-offset: 2px;
+}
+
+.error {
+  color: #e74c3c;
+  background-color: #fadbd8;
+  padding: 8px 12px;
+  border-radius: 4px;
+  margin-bottom: 12px;
+  font-size: 14px;
+}
+
+.success {
+  color: #27ae60;
+  background-color: #d5f4e6;
+  padding: 8px 12px;
+  border-radius: 4px;
+  margin-bottom: 12px;
+  font-size: 14px;
+}
+
+.editing-task .task-content {
+  padding-right: 0;
+}
+
+.task-list > * {
+  margin-bottom: 12px;
+}
+
+.task-list > *:last-child {
+  margin-bottom: 0;
+}
+
+.action-buttons {
+  scroll-behavior: smooth;
+}
+
+.action-buttons.scrolling {
+  padding-bottom: 8px;
+}
+
+@keyframes blink {
+  0%, 50% { opacity: 1; }
+  51%, 100% { opacity: 0; }
+}
+
+.cursor-visual {
+  position: absolute;
+  width: 2px;
+  height: 1.2em;
+  background-color: #3498db;
+  animation: blink 1s infinite;
+  pointer-events: none;
+}
+
+.task-item {
+  transition: all 0.2s ease-in-out;
+}
+
+.btn {
+  transition: all 0.2s ease-in-out;
+}
+
+.task-item:hover {
+  box-shadow: 0 4px 8px rgba(0,0,0,0.15);
+}
+
+.task-item:focus-within {
+  box-shadow: 0 0 0 3px rgba(52, 152, 219, 0.3);
+}
+
+@media (max-width: 1230px) {
+  .btn-status {
+    padding: 6px 12px;
+    gap: 6px;
+  }
+  
+  .btn-text {
+    display: inline;
+  }
+  
+  .btn-status[title]:hover::after {
+    display: none;
+  }
+  
+  .task-item.editing-task .task-header {
+    position: relative;
+    top: auto;
+    right: auto;
+    display: flex;
+    justify-content: flex-end;
+    margin-bottom: 12px;
+  }
+  
+  .task-item.editing-task {
+    padding-top: 16px;
+    min-height: 120px;
+  }
+  
+  .container {
+    margin: 0 20px;
+  }
+
+  .app {
+    padding: 10px;
+  }
+  .task-input-real,
+  .input-preview {
+    padding: 10px;
+    font-size: 16px;
+    line-height: 1.4;
+  }
+}
+
+@media (max-width: 768px) {
+  .input-with-preview {
+    min-height: 40px;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
+  
+  .task-input-real{
+    transform: translateZ(0);
+    -webkit-overflow-scrolling: touch;
+  }
+  .input-preview {
+    padding: 10px;
+    font-size: 16px;
+    min-height: 40px;
+    max-height: 150px;
+    line-height: 1.4;
+  }
+  
+  .action-buttons {
+    flex-wrap: wrap;
+    gap: 4px;
+  }
+  
+  .action-buttons-right {
+    margin-left: 0;
+    width: 100%;
+    justify-content: flex-end;
+    margin-top: 8px;
+  }
+  
+  .btn-status {
+    font-size: 11px;
+    padding: 4px 8px;
+  }
+
+  .task-content-simple {
+    gap: 3px;
+  }
+  
+  .task-normal-text {
+    font-size: 13px;
+  }
+  
+  .task-element {
+    padding: 1px 4px;
+    font-size: 10px;
+  }
+  
+  .email-text, .link-text {
+    max-width: 80px;
+  }
+  
+  .char-counter {
+    font-size: 11px;
+  }
+}
+
+@media (max-width: 480px) {
+  .input-with-preview {
+    min-height: 38px;
+  }
+   .task-input-real,
+  .input-preview {
+    padding: 8px;
+    font-size: 16px;
+    min-height: 38px;
+    max-height: 120px;
+    line-height: 1.4;
+  }
+
+  
+  .task-item.editing-task {
+    padding: 12px;
+    min-height: 110px;
+  }
+  
+  .btn-status {
+    min-width: 30px;
+    padding: 3px;
+  }
+  
+  .btn-text {
+    font-size: 10px;
+  }
+
+  .action-buttons-right .btn {
+    font-size: 11px;
+    padding: 4px 8px;
+  }
+
+  .task-content-simple {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 6px;
+  }
+  
+  .email-text, .link-text {
+    max-width: 120px;
+  }
+  
+  .task-item.editing-task .task-header {
+    margin-bottom: 8px;
+  }
+  
+  .btn-action-icon {
+    width: 28px;
+    height: 28px;
+    font-size: 14px;
+  }
+
+  .action-buttons {
+    gap: 4px;
+  }
+}
+
+@media (max-width: 360px) {
+  .app {
+    padding: 8px;
+  }
+  
+  .container {
+    margin: 0 10px;
+  }
+  
+  .task-item {
+    padding: 12px;
+  }
+  
+  .task-item.editing-task {
+    padding: 12px;
+  }
+  
+  .action-buttons {
+    gap: 4px;
+  }
+  
+  .btn-status {
+    min-width: 32px;
+    padding: 3px 4px;
+    font-size: 10px;
+  }
+  
+  .btn-action-icon {
+    width: 26px;
+    height: 26px;
+    font-size: 12px;
+  }
+
+  .input-with-preview {
+    min-height: 36px;
+  }
+  
+  .task-input-real,
+  .input-preview {
+    padding: 6px;
+    font-size: 16px;
+    min-height: 36px;
+    max-height: 100px;
+    line-height: 1.4;
+  }
+  
+  .action-buttons-right .btn {
+    font-size: 10px;
+    padding: 3px 6px;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .btn {
+    transition: none;
+  }
+  
+  .touchable {
+    transition: none;
+  }
+  
+  .btn-status {
+    transition: none;
+  }
+  
+  .task-item {
+    transition: none;
+  }
+}
+
+.task-content-editable {
+  display: none;
+}
+
+.input-dual-container,
+.input-dual-real,
+.input-dual-overlay,
+.task-input-simple,
+.task-input-preview,
+.task-input-realtime,
+.task-input-hidden,
+.task-input-colored-realtime,
+.task-input-dual,
+.task-input-contenteditable,
+.task-input-display,
+.task-input-container,
+.cursor,
+.task-input-visual {
+  display: none !important;
+}
