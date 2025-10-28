@@ -22,6 +22,11 @@ export default defineConfig({
     outDir: 'dist',
     sourcemap: false,
     minify: 'terser',
+     terserOptions: {
+      compress: {
+        drop_console: true,  // Remover console.log en producción
+      },
+    },
   },
   // Configuración base para despliegue
   base: './',
